@@ -1,3 +1,5 @@
+const router = require('express').Router();
+
 // Require the `restricted` middleware from `auth-middleware.js`. You will need it here!
 
 
@@ -26,3 +28,5 @@
 
 
 // Don't forget to add the router to the `exports` object so it can be required in other modules
+
+module.exports = router;
