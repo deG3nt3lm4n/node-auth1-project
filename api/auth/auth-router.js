@@ -68,7 +68,7 @@ const {add, findBy} = require('../users/users-model');
 
   router.post('/login', async (req,res,next) => {
     const {username, password} = req.body;
-    const [user] = await findBy({username});
+    const [user] = await findBy({username: username});
 
     if(user && bcrypt.compareSync(password, user.password)){
       req.session.user = user;
@@ -95,7 +95,13 @@ const {add, findBy} = require('../users/users-model');
   }
  */
 router.get('/logout', (req,res,next) => {
-
+  if(req.session && req.session.user){
+    req.session.destroy(err => {
+      res.status(200).json({message: 'logged out'});
+    });
+  }else{
+    next({message: 'no session', status: 200});
+  }
 });
 
 
