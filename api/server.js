@@ -3,6 +3,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const session = require("express-session");
 const KnexSessionStore = require('connect-session-knex')(session);
+const knex = require('../data/db-config');
 
 const usersRouter = require('./users/users-router');
 const authRouter = require('./auth/auth-router');
@@ -26,18 +27,18 @@ server.use(session({
   name: 'chocolatechip',
   secret: 'what is life',
   saveUninitialized: false,
+  resave: false,
   cookie: {
-    maxAge: 100 * 120,
+    maxAge: 1000 * 60 * 10,
     secure: false,
     httpOnly: true
   },
-  resave: false,
   store: new KnexSessionStore({
-    knex: require('../data/db-config'),
+    knex,
+    createtable: true,
+    clearInterval: 1000 * 60 * 10,
     tablename: 'sessions',
     sidfieldname: 'sid',
-    createtable: true,
-    clearInterval: 100 * 120,
   })
 }));
 
