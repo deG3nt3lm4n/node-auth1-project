@@ -10,7 +10,12 @@ function find() {
   resolves to an ARRAY with all users that match the filter condition
  */
 function findBy(filter) {
-  return db('users').where({filter});
+  if(typeof(filter.username) === 'string'){
+    return db('users').where(filter);
+  }else{
+    return db('users').where('user_id', filter.user_id);
+    }
+
 }
 
 /**
@@ -23,8 +28,9 @@ function findById(user_id) {
 /**
   resolves to the newly inserted user { user_id, username }
  */
-function add(user) {
-  return db('users').insert(user);
+async function add(user) {
+  const userData =  await db('users').insert(user);
+  return findById(userData);
 }
 
 // Don't forget to add these to the `exports` object so they can be required in other modules
